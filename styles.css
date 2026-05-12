@@ -493,6 +493,30 @@ img {
   box-shadow: 0 8px 40px rgba(74, 158, 206, 0.1);
 }
 
+.service-card.featured-card {
+  border-color: rgba(74, 158, 206, 0.3);
+  background: rgba(74, 158, 206, 0.08);
+  position: relative;
+}
+
+.service-card.featured-card:hover {
+  border-color: rgba(74, 158, 206, 0.45);
+  box-shadow: 0 8px 40px rgba(74, 158, 206, 0.15);
+}
+
+.card-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--accent);
+  background: rgba(74, 158, 206, 0.15);
+  border-radius: 100px;
+  margin-bottom: 12px;
+}
+
 .service-icon {
   width: 64px;
   height: 64px;
