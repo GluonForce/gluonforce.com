@@ -281,9 +281,10 @@ img {
 }
 
 .logo-img {
-  width: 36px;
   height: 36px;
+  width: auto;
   object-fit: contain;
+  filter: drop-shadow(0 0 6px rgba(74, 155, 217, 0.3));
 }
 
 .logo-text {
