@@ -176,34 +176,36 @@
           <h2>Ready to Build<br><span class="text-accent">Something Great</span>?</h2>
           <p>Tell us about your project and we'll get back to you within 24 hours.</p>
         </div>
-        <form class="contact-form" id="contactForm">
+        
+        <form class="contact-form" id="contactForm" name="contact" data-netlify="true">
           <div class="form-row">
             <div class="form-group">
-              <input type="text" class="glass-input" placeholder="Your Name" required>
+              <input type="text" name="name" class="glass-input" placeholder="Your Name" required>
             </div>
             <div class="form-group">
-              <input type="email" class="glass-input" placeholder="Work Email" required>
+              <input type="email" name="email" class="glass-input" placeholder="Work Email" required>
             </div>
           </div>
           <div class="form-row">
             <div class="form-group">
-              <input type="text" class="glass-input" placeholder="Company Name">
+              <input type="text" name="company" class="glass-input" placeholder="Company Name">
             </div>
             <div class="form-group">
-              <select class="glass-input">
+              <select name="needs" class="glass-input" required>
                 <option value="" disabled selected>What do you need?</option>
-                <option>Build a product / MVP</option>
-                <option>Employer of Record</option>
-                <option>Both</option>
-                <option>Something else</option>
+                <option value="Build a product / MVP">Build a product / MVP</option>
+                <option value="Employer of Record">Employer of Record</option>
+                <option value="Both">Both</option>
+                <option value="Something else">Something else</option>
               </select>
             </div>
           </div>
           <div class="form-group">
-            <textarea class="glass-input" placeholder="Tell us about your project..." rows="4"></textarea>
+            <textarea name="message" class="glass-input" placeholder="Tell us about your project..." rows="4" required></textarea>
           </div>
           <button type="submit" class="btn btn-primary btn-full">Let's Build Together →</button>
         </form>
+        
       </div>
     </div>
   </section>
