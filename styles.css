@@ -409,14 +409,12 @@ img { max-width: 100%; height: auto; }
 }
 
 /* ==========================================
-   Scroll-Driven Experience (Optimized)
+   Scroll-Driven Experience (Restored & Smooth)
    ========================================== */
    .scroll-experience {
     position: relative;
     z-index: 1;
-    /* Allow natural scrolling room for each scene step */
-    height: auto; 
-    padding-bottom: 50vh; 
+    height: 400vh; /* Keeps original layout track distance depth */
   }
   
   .scroll-viewport {
@@ -429,21 +427,23 @@ img { max-width: 100%; height: auto; }
   
   /* --- Scenes --- */
   .scene {
-    position: relative; /* Change from absolute so they sequence in stack naturally */
-    min-height: 100vh;
+    position: absolute; /* Revert back to absolute layering layout stack */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
     opacity: 0;
-    transform: translateY(20px);
-    will-change: transform, opacity; /* Hint engine to hardware accelerate */
-    transition: opacity 0.6s cubic-bezier(0.25, 1, 0.5, 1), 
-                transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+    pointer-events: none;
+    will-change: opacity; /* Instructs GPU to allocate layer resources */
+    transition: opacity 0.5s cubic-bezier(0.25, 1, 0.5, 1); /* Premium cinematic easing curve */
   }
   
   .scene.active {
     opacity: 1;
-    transform: translateY(0);
+    pointer-events: auto;
   }
 
 .scene-center {
