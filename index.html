@@ -13,15 +13,12 @@
 </head>
 <body>
 
-  <!-- Background orbs -->
   <div class="bg-orbs">
     <div class="orb orb-1"></div>
     <div class="orb orb-2"></div>
     <div class="orb orb-3"></div>
-    <div class="orb orb-4"></div>
   </div>
 
-  <!-- Navigation -->
   <nav class="navbar" id="navbar">
     <div class="container nav-container">
       <a href="#" class="logo">
@@ -35,16 +32,14 @@
       </button>
       <ul class="nav-links" id="navLinks">
         <li><a href="#services">What We Do</a></li>
-        <li><a href="#why-us">Why Gluon Force</a></li>
-        <li><a href="#how-it-works">How It Works</a></li>
-        <li><a href="#contact" class="btn btn-nav">Start a Project</a></li>
+        <li><a href="#contact" class="btn btn-nav">Get in Touch</a></li>
       </ul>
     </div>
   </nav>
 
-  <!-- Hero Section -->
   <section class="hero" id="hero">
-    <div class="container hero-container">
+    <div class="hero-glow"></div>
+    <div class="container">
       <div class="hero-content">
         <div class="hero-badge glass-subtle">
           <span class="badge-dot"></span>
@@ -53,154 +48,133 @@
         <h1>We Build Products<br><span class="text-accent">Alongside Founders</span></h1>
         <p class="hero-subtitle">Sri Lankan engineering teams supercharged with AI tooling — shipping at startup speed for a fraction of the cost. We're not just staff, we're your technical partners.</p>
         <div class="hero-ctas">
-          <a href="#contact" class="btn btn-primary">Start a Project</a>
-          <a href="#services" class="btn btn-glass">See How It Works <span class="arrow">→</span></a>
+          <a href="#services" class="btn btn-primary">Discover What We Do ↓</a>
+          <a href="#contact" class="btn btn-glass">Get in Touch <span class="arrow">→</span></a>
         </div>
       </div>
-      <div class="hero-visual">
-        <div class="glass-card floating-card card-1">
-          <div class="card-icon">⚡</div>
-          <div class="card-label">Faster Delivery</div>
-          <div class="card-value">3x</div>
-        </div>
-        <div class="glass-card floating-card card-2">
-          <div class="card-icon">🤖</div>
-          <div class="card-label">AI-Augmented</div>
-          <div class="card-value">100%</div>
-        </div>
-        <div class="glass-card floating-card card-3">
-          <div class="card-icon">💰</div>
-          <div class="card-label">Cost Savings</div>
-          <div class="card-value">60%+</div>
-        </div>
-        <div class="hero-glow"></div>
-      </div>
+    </div>
+    <div class="scroll-hint" id="scrollHint">
+      <span>Scroll to explore</span>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M12 5v14M19 12l-7 7-7-7"/>
+      </svg>
     </div>
   </section>
 
-  <!-- Services Section -->
-  <section class="services" id="services">
-    <div class="container">
-      <div class="section-header">
-        <span class="section-tag glass-subtle">What We Do</span>
-        <h2>Your Startup's <span class="text-accent">Unfair Advantage</span></h2>
-        <p class="section-desc">From building your MVP to scaling your product — we embed with your team and ship with AI speed.</p>
+  <section class="scroll-experience" id="services">
+    <div class="scroll-viewport">
+
+      <div class="scroll-progress" id="scrollProgress">
+        <div class="progress-dot active" data-step="0"></div>
+        <div class="progress-dot" data-step="1"></div>
+        <div class="progress-dot" data-step="2"></div>
       </div>
-      <div class="services-grid">
-        <div class="glass-card service-card featured-card">
-          <div class="service-icon">
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+
+      <div class="scene active" data-scene="0">
+        <div class="scene-center">
+          <span class="scene-tag glass-subtle">Our Services</span>
+          <h2 class="scene-heading">WHAT WE DO</h2>
+          <p class="scene-subtitle">Scroll to discover how we help founders build and scale</p>
+          <div class="flow-hint">
+            <svg width="48" height="80" viewBox="0 0 48 80" fill="none">
+              <path d="M24 0 V30" stroke="rgba(74,158,206,0.4)" stroke-width="2" stroke-linecap="round"/>
+              <path d="M24 30 Q24 50 8 65" stroke="rgba(74,158,206,0.4)" stroke-width="2" stroke-linecap="round" fill="none"/>
+              <path d="M24 30 Q24 50 40 65" stroke="rgba(74,158,206,0.4)" stroke-width="2" stroke-linecap="round" fill="none"/>
             </svg>
           </div>
-          <div class="card-badge">Core Service</div>
-          <h3>AI-Powered Project Building</h3>
-          <p>We don't just write code — we build products alongside you. Our engineers leverage cutting-edge AI tooling to ship features 3x faster, turning weeks of work into days.</p>
         </div>
-        <div class="glass-card service-card">
-          <div class="service-icon">
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="12" cy="7" r="4"/>
-              <path d="M5.5 21a6.5 6.5 0 0 1 13 0"/>
-              <circle cx="19" cy="7" r="3"/>
-              <path d="M17.5 21a6 6 0 0 1 4.5-5.8"/>
+      </div>
+
+      <div class="scene" data-scene="1">
+        <div class="scene-center scene-wide">
+          <div class="branch-connector-top">
+            <svg width="500" height="50" viewBox="0 0 500 50" fill="none" preserveAspectRatio="xMidYMid meet">
+              <path d="M250 0 V12 Q250 30 100 45" stroke="rgba(74,158,206,0.3)" stroke-width="2" stroke-linecap="round"/>
+              <path d="M250 0 V12 Q250 30 400 45" stroke="rgba(74,158,206,0.3)" stroke-width="2" stroke-linecap="round"/>
             </svg>
           </div>
-          <h3>Dedicated Teams</h3>
-          <p>Scale with embedded engineering teams from Sri Lanka's top talent pool. Full-stack, design, QA — whatever your product needs to grow.</p>
+          <div class="services-duo">
+            <div class="service-panel glass-card panel-left">
+              <div class="service-panel-header">
+                <div class="detail-icon-wrap">
+                  <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                    <path d="M9 12l2 2 4-4"/>
+                  </svg>
+                </div>
+                <h3>Employer of Record</h3>
+              </div>
+              <p class="service-panel-desc">Hiring in Sri Lanka on behalf of you. Handling administrative and legal responsibilities.</p>
+              <div class="detail-features">
+                <div class="feature-item">
+                  <span class="feature-check">✓</span>
+                  <span>Contracts &amp; compliance</span>
+                </div>
+                <div class="feature-item">
+                  <span class="feature-check">✓</span>
+                  <span>Payroll &amp; benefits</span>
+                </div>
+                <div class="feature-item">
+                  <span class="feature-check">✓</span>
+                  <span>No local entity needed</span>
+                </div>
+              </div>
+            </div>
+            <div class="service-panel glass-card panel-right">
+              <div class="service-panel-header">
+                <div class="detail-icon-wrap">
+                  <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+                  </svg>
+                </div>
+                <h3>Project Build Out</h3>
+              </div>
+              <p class="service-panel-desc">We work with you to build out your vision, from rapid prototype to deployment and ongoing support without sacrificing your runway.</p>
+              <div class="detail-features">
+                <div class="feature-item">
+                  <span class="feature-check">✓</span>
+                  <span>AI-augmented, 3x speed</span>
+                </div>
+                <div class="feature-item">
+                  <span class="feature-check">✓</span>
+                  <span>Prototype to production</span>
+                </div>
+                <div class="feature-item">
+                  <span class="feature-check">✓</span>
+                  <span>Scale up or down</span>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="glass-card service-card">
-          <div class="service-icon">
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-              <path d="M9 12l2 2 4-4"/>
+      </div>
+
+      <div class="scene" data-scene="2">
+        <div class="scene-center">
+          <div class="converge-connector">
+            <svg width="400" height="50" viewBox="0 0 400 50" fill="none" preserveAspectRatio="xMidYMid meet">
+              <path d="M80 0 Q80 20 200 38 V50" stroke="rgba(74,158,206,0.3)" stroke-width="2" stroke-linecap="round"/>
+              <path d="M320 0 Q320 20 200 38 V50" stroke="rgba(74,158,206,0.3)" stroke-width="2" stroke-linecap="round"/>
             </svg>
           </div>
-          <h3>Employer of Record</h3>
-          <p>Need to hire directly? We handle contracts, payroll, compliance, and benefits — so you can onboard Sri Lankan talent without a local entity.</p>
+          <div class="cta-content">
+            <span class="cta-badge glass-subtle">Both paths lead here</span>
+            <h2 class="cta-heading">Get in touch!</h2>
+            <p class="cta-desc">Whether you need a full product built from scratch or help hiring in Sri Lanka — let's talk.</p>
+            <a href="#contact" class="btn btn-primary btn-lg">Start a Conversation →</a>
+          </div>
         </div>
       </div>
+
     </div>
   </section>
 
-  <!-- Why Gluon Force Section -->
-  <section class="why-srilanka" id="why-us">
-    <div class="container">
-      <div class="why-grid">
-        <div class="why-stats">
-          <div class="glass-card stat-card">
-            <div class="stat-number">3x</div>
-            <div class="stat-label">Faster Shipping</div>
-            <p class="stat-desc">AI tooling accelerates every sprint</p>
-          </div>
-          <div class="glass-card stat-card">
-            <div class="stat-number">60%+</div>
-            <div class="stat-label">Cost Effective</div>
-            <p class="stat-desc">vs. US/EU engineering teams</p>
-          </div>
-          <div class="glass-card stat-card">
-            <div class="stat-number">GMT +5:30</div>
-            <div class="stat-label">Timezone</div>
-            <p class="stat-desc">Overlap with EU &amp; US hours</p>
-          </div>
-          <div class="glass-card stat-card">
-            <div class="stat-number">100%</div>
-            <div class="stat-label">AI-Augmented</div>
-            <p class="stat-desc">Every engineer, every workflow</p>
-          </div>
-        </div>
-        <div class="why-content">
-          <span class="section-tag glass-subtle">Why Gluon Force</span>
-          <h2>AI + Sri Lankan Talent = <span class="text-accent">Startup Superpower</span></h2>
-          <p>We pair world-class Sri Lankan engineers with the latest AI development tools — Copilot, Cursor, custom agents — so every hour of work produces the output of three. You get Silicon Valley calibre execution at a fraction of the cost.</p>
-          <p>We're not an outsourcing shop. We embed with your team, understand your product, and build alongside you like co-founders who happen to have an engineering army.</p>
-          <a href="#contact" class="btn btn-primary">Talk to Us</a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- How It Works Section -->
-  <section class="how-it-works" id="how-it-works">
-    <div class="container">
-      <div class="section-header">
-        <span class="section-tag glass-subtle">How It Works</span>
-        <h2>From Idea to Product in <span class="text-accent">3 Steps</span></h2>
-        <p class="section-desc">No lengthy procurement. No agency overhead. Just builders who ship.</p>
-      </div>
-      <div class="steps-grid">
-        <div class="glass-card step-card">
-          <div class="step-number">01</div>
-          <h3>Share Your Vision</h3>
-          <p>Tell us about your product, your goals, and your timeline. We'll scope the work and assemble the right AI-augmented team for your project.</p>
-        </div>
-        <div class="step-connector">
-          <svg width="40" height="2" viewBox="0 0 40 2"><line x1="0" y1="1" x2="40" y2="1" stroke="#4a9ece" stroke-width="2" stroke-dasharray="4 4"/></svg>
-        </div>
-        <div class="glass-card step-card">
-          <div class="step-number">02</div>
-          <h3>We Build Together</h3>
-          <p>Our engineers embed with your workflow — daily standups, shared repos, Slack channels. AI tooling means we ship features at 3x the pace.</p>
-        </div>
-        <div class="step-connector">
-          <svg width="40" height="2" viewBox="0 0 40 2"><line x1="0" y1="1" x2="40" y2="1" stroke="#4a9ece" stroke-width="2" stroke-dasharray="4 4"/></svg>
-        </div>
-        <div class="glass-card step-card">
-          <div class="step-number">03</div>
-          <h3>Ship &amp; Scale</h3>
-          <p>Launch your product, gather feedback, iterate fast. Scale the team up or down as your startup evolves — we handle all employment logistics.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- CTA / Contact Section -->
   <section class="contact" id="contact">
     <div class="container">
       <div class="glass-card contact-card">
         <div class="contact-content">
           <h2>Ready to Build<br><span class="text-accent">Something Great</span>?</h2>
-          <p>Whether you need a full product built from scratch, an AI-augmented team to accelerate development, or just help hiring in Sri Lanka — let's talk.</p>
+          <p>Tell us about your project and we'll get back to you within 24 hours.</p>
         </div>
         <form class="contact-form" id="contactForm">
           <div class="form-row">
@@ -219,14 +193,14 @@
               <select class="glass-input">
                 <option value="" disabled selected>What do you need?</option>
                 <option>Build a product / MVP</option>
-                <option>Dedicated engineering team</option>
                 <option>Employer of Record</option>
+                <option>Both</option>
                 <option>Something else</option>
               </select>
             </div>
           </div>
           <div class="form-group">
-            <textarea class="glass-input" placeholder="Tell us about your project — what are you building and where do you need help?" rows="4"></textarea>
+            <textarea class="glass-input" placeholder="Tell us about your project..." rows="4"></textarea>
           </div>
           <button type="submit" class="btn btn-primary btn-full">Let's Build Together →</button>
         </form>
@@ -234,45 +208,20 @@
     </div>
   </section>
 
-  <!-- Footer -->
   <footer class="footer">
     <div class="container">
-      <div class="footer-grid">
-        <div class="footer-brand">
-          <a href="#" class="logo">
-            <img src="assets/logo-mark-sm.png" alt="Gluon Force" class="logo-img">
-            <span class="logo-text">Gluon Force</span>
-          </a>
-          <p>AI-powered Sri Lankan teams building products alongside founders worldwide.</p>
+      <div class="footer-content">
+        <a href="#" class="logo">
+          <img src="assets/logo-mark-sm.png" alt="Gluon Force" class="logo-img">
+          <span class="logo-text">Gluon Force</span>
+        </a>
+        <p class="footer-tagline">AI-powered Sri Lankan teams building products alongside founders worldwide.</p>
+        <div class="footer-links-row">
+          <a href="mailto:hello@gluonforce.com">hello@gluonforce.com</a>
+          <a href="#">LinkedIn</a>
+          <a href="#">Twitter</a>
         </div>
-        <div class="footer-links">
-          <h4>Company</h4>
-          <ul>
-            <li><a href="#services">What We Do</a></li>
-            <li><a href="#why-us">Why Gluon Force</a></li>
-            <li><a href="#how-it-works">How It Works</a></li>
-            <li><a href="#contact">Contact</a></li>
-          </ul>
-        </div>
-        <div class="footer-links">
-          <h4>Services</h4>
-          <ul>
-            <li><a href="#services">AI Project Building</a></li>
-            <li><a href="#services">Dedicated Teams</a></li>
-            <li><a href="#services">Employer of Record</a></li>
-          </ul>
-        </div>
-        <div class="footer-links">
-          <h4>Connect</h4>
-          <ul>
-            <li><a href="mailto:hello@gluonforce.com">hello@gluonforce.com</a></li>
-            <li><a href="#">LinkedIn</a></li>
-            <li><a href="#">Twitter</a></li>
-          </ul>
-        </div>
-      </div>
-      <div class="footer-bottom">
-        <p>&copy; 2026 Gluon Force. All rights reserved.</p>
+        <p class="footer-copyright">&copy; 2026 Gluon Force. All rights reserved.</p>
       </div>
     </div>
   </footer>
