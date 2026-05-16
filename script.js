@@ -1,65 +1,69 @@
-// --- Scroll-Driven Experience ---
 function initScrollExperience() {
   const container = document.querySelector('.scroll-experience');
+  if (!container) return;
+
   const scenes = container.querySelectorAll('.scene');
   const progressDots = document.querySelectorAll('.progress-dot');
   const progressBar = document.getElementById('scrollProgress');
   const scrollHint = document.getElementById('scrollHint');
-  const numScenes = scenes.length;
 
-  let currentScene = 0;
-  let ticking = false;
-
-  function update() {
-    const rect = container.getBoundingClientRect();
-    const scrollableDistance = container.offsetHeight - window.innerHeight;
-
-    if (scrollableDistance <= 0) { ticking = false; return; }
-
-    const progress = Math.max(0, Math.min(1, -rect.top / scrollableDistance));
-    const newScene = Math.min(numScenes - 1, Math.floor(progress * numScenes));
-
-    if (newScene !== currentScene) {
-      scenes[currentScene].classList.remove('active');
-      scenes[newScene].classList.add('active');
-      currentScene = newScene;
-    }
-
-    progressDots.forEach((dot, i) => {
-      dot.classList.toggle('active', i === currentScene);
-    });
-
-    const isInView = rect.top < window.innerHeight && rect.bottom > 0;
-    if (progressBar) {
-      progressBar.classList.toggle('visible', isInView && rect.top <= 0);
-    }
-
+  // Handle Scroll Hint fade out smoothly without heavy math
+  window.addEventListener('scroll', () => {
     if (scrollHint) {
-      scrollHint.style.opacity = Math.max(0, 1 - window.scrollY / 300);
+      scrollHint.style.opacity = window.scrollY > 150 ? '0' : '1';
     }
+  }, { passive: true });
 
-    ticking = false;
-  }
+  // Use IntersectionObserver to track which scene is active natively
+  const observerOptions = {
+    root: null, // viewport
+    rootMargin: '-20% 0px -20% 0px', // Trigger slightly before it hits center stage
+    threshold: 0.2 // Trigger when 20% of the scene is intersecting
+  };
 
-  function onScroll() {
-    if (!ticking) {
-      requestAnimationFrame(update);
-      ticking = true;
-    }
-  }
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        const targetScene = entry.target;
+        const sceneIndex = parseInt(targetScene.getAttribute('data-scene'), 10);
 
+        // Remove active class from all other scenes and dots
+        scenes.forEach(s => s.classList.remove('active'));
+        progressDots.forEach(d => d.classList.remove('active'));
+
+        // Activate current scene and its progress dot
+        targetScene.classList.add('active');
+        if (progressDots[sceneIndex]) {
+          progressDots[sceneIndex].classList.add('active');
+        }
+      }
+    });
+  }, observerOptions);
+
+  // Attach observer to each scene
+  scenes.forEach(scene => observer.observe(scene));
+
+  // Toggle vertical progress indicator bar visibility using container intersection
+  const containerObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (progressBar) {
+        progressBar.classList.toggle('visible', entry.isIntersecting);
+      }
+    });
+  }, { rootMargin: '-50% 0px -50% 0px' });
+
+  containerObserver.observe(container);
+
+  // Progressive dot smooth scrolling behavior
   progressDots.forEach((dot, i) => {
     dot.addEventListener('click', () => {
-      const scrollableDistance = container.offsetHeight - window.innerHeight;
-      const targetProgress = i / numScenes;
-      const targetScroll = container.offsetTop + targetProgress * scrollableDistance;
-      window.scrollTo({ top: targetScroll, behavior: 'smooth' });
+      if (scenes[i]) {
+        scenes[i].scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
     });
   });
-
-  window.addEventListener('scroll', onScroll, { passive: true });
-  update();
 }
+
 
 // --- Navbar scroll effect ---
 function initNavbar() {
