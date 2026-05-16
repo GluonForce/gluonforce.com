@@ -104,24 +104,58 @@ function initMobileMenu() {
   });
 }
 
-// --- Contact form ---
+// --- Contact form (Updated for Netlify AJAX Processing) ---
 function initContactForm() {
   const contactForm = document.getElementById('contactForm');
   if (!contactForm) return;
 
   contactForm.addEventListener('submit', (e) => {
-    e.preventDefault();
+    e.preventDefault(); // Keep page from hard-refreshing
+    
     const btn = contactForm.querySelector('button[type="submit"]');
     const originalText = btn.textContent;
-    btn.textContent = 'Message Sent ✓';
-    btn.style.background = '#2ecc71';
+    
+    // Prevent immediate multiple submissions & give a visual cue
     btn.disabled = true;
-    setTimeout(() => {
-      btn.textContent = originalText;
-      btn.style.background = '';
+    btn.textContent = 'Sending...';
+
+    // Package the form parameters inside an array Netlify expects
+    const formData = new FormData(contactForm);
+
+    fetch("/", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams(formData).toString()
+    })
+    .then((response) => {
+      if (response.ok) {
+        // Success animation triggers if Netlify server saves it cleanly
+        btn.textContent = 'Message Sent ✓';
+        btn.style.background = '#2ecc71';
+        
+        setTimeout(() => {
+          btn.textContent = originalText;
+          btn.style.background = '';
+          btn.disabled = false;
+          contactForm.reset();
+        }, 3000);
+      } else {
+        throw new Error('Network error processing application response.');
+      }
+    })
+    .catch((error) => {
+      console.error('Form submission error:', error);
+      
+      // Error handling UI layout change
+      btn.textContent = 'Error! Try Again';
+      btn.style.background = '#e74c3c';
       btn.disabled = false;
-      contactForm.reset();
-    }, 3000);
+      
+      setTimeout(() => {
+        btn.textContent = originalText;
+        btn.style.background = '';
+      }, 3000);
+    });
   });
 }
 
