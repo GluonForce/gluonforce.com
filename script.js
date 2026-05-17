@@ -1,23 +1,51 @@
-// --- Scroll-Driven Experience ---
+// --- Scroll-Driven Experience (High Performance) ---
 function initScrollExperience() {
   const container = document.querySelector('.scroll-experience');
+  if (!container) return;
+
   const scenes = container.querySelectorAll('.scene');
   const progressDots = document.querySelectorAll('.progress-dot');
   const progressBar = document.getElementById('scrollProgress');
   const scrollHint = document.getElementById('scrollHint');
   const numScenes = scenes.length;
 
+  if (numScenes === 0) return;
+
   let currentScene = 0;
   let ticking = false;
 
+  // Cache dimensions to completely eliminate layout thrashing
+  let containerOffsetTop = 0;
+  let containerHeight = 0;
+  let scrollableDistance = 0;
+
+  function measure() {
+    containerOffsetTop = container.offsetTop;
+    containerHeight = container.offsetHeight;
+    scrollableDistance = containerHeight - window.innerHeight;
+  }
+
+  // Initial measurement calculation
+  measure();
+  
+  // Re-measure structure only when window changes dimensions
+  window.addEventListener('resize', measure);
+
   function update() {
-    const rect = container.getBoundingClientRect();
-    const scrollableDistance = container.offsetHeight - window.innerHeight;
+    const scrollY = window.scrollY;
+    const relativeScroll = scrollY - containerOffsetTop;
 
-    if (scrollableDistance <= 0) { ticking = false; return; }
+    if (scrollableDistance <= 0) { 
+      ticking = false; 
+      return; 
+    }
 
-    const progress = Math.max(0, Math.min(1, -rect.top / scrollableDistance));
-    const newScene = Math.min(numScenes - 1, Math.floor(progress * numScenes));
+    // Normalized progress tracker from 0 to 1
+    const progress = Math.max(0, Math.min(1, relativeScroll / scrollableDistance));
+    
+    // Smoothly calculate discrete steps across progress
+    let newScene = Math.floor(progress * numScenes);
+    if (newScene >= numScenes) newScene = numScenes - 1;
 
     if (newScene !== currentScene) {
       scenes[currentScene].classList.remove('active');
@@ -29,13 +57,15 @@ function initScrollExperience() {
       dot.classList.toggle('active', i === currentScene);
     });
 
-    const isInView = rect.top < window.innerHeight && rect.bottom > 0;
+    // Make side progress bar visible when user is inside the section boundaries
+    const buffer = 50; 
+    const isInView = scrollY >= (containerOffsetTop - buffer) && scrollY <= (containerOffsetTop + scrollableDistance + buffer);
     if (progressBar) {
-      progressBar.classList.toggle('visible', isInView && rect.top <= 0);
+      progressBar.classList.toggle('visible', isInView);
     }
 
     if (scrollHint) {
-      scrollHint.style.opacity = Math.max(0, 1 - window.scrollY / 300);
+      scrollHint.style.opacity = Math.max(0, 1 - scrollY / 300);
     }
 
     ticking = false;
@@ -48,18 +78,26 @@ function initScrollExperience() {
     }
   }
 
+  // Handle progress dot click scroll mapping targets accurately
   progressDots.forEach((dot, i) => {
     dot.addEventListener('click', () => {
-      const scrollableDistance = container.offsetHeight - window.innerHeight;
-      const targetProgress = i / numScenes;
-      const targetScroll = container.offsetTop + targetProgress * scrollableDistance;
-      window.scrollTo({ top: targetScroll, behavior: 'smooth' });
+      measure(); 
+      const segmentSize = 1 / numScenes;
+      const targetProgressMidpoint = (i * segmentSize) + (segmentSize / 2);
+      const targetScroll = containerOffsetTop + (targetProgressMidpoint * scrollableDistance);
+
+      window.scrollTo({
+        top: targetScroll,
+        behavior: 'smooth'
+      });
     });
   });
 
   window.addEventListener('scroll', onScroll, { passive: true });
   update();
 }
+
+
 
 // --- Navbar scroll effect ---
 function initNavbar() {

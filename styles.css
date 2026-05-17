@@ -392,12 +392,12 @@ img { max-width: 100%; height: auto; }
 }
 
 /* ==========================================
-   Scroll-Driven Experience
+   Scroll-Driven Experience Layout (2 Scenes)
    ========================================== */
 .scroll-experience {
   position: relative;
   z-index: 1;
-  height: 400vh;
+  height: 160vh; /* Consolidated snappy distance layout tracking */
 }
 
 .scroll-viewport {
@@ -408,7 +408,6 @@ img { max-width: 100%; height: auto; }
   overflow: hidden;
 }
 
-/* --- Scenes --- */
 .scene {
   position: absolute;
   top: 0;
@@ -420,7 +419,8 @@ img { max-width: 100%; height: auto; }
   justify-content: center;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.4s ease;
+  will-change: opacity;
+  transition: opacity 0.5s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 .scene.active {
@@ -435,7 +435,7 @@ img { max-width: 100%; height: auto; }
   width: 100%;
 }
 
-/* --- Progress Dots --- */
+/* --- Progress Indicator Dots --- */
 .scroll-progress {
   position: absolute;
   right: 32px;
@@ -474,9 +474,7 @@ img { max-width: 100%; height: auto; }
   transform: scale(1.3);
 }
 
-/* ==========================================
-   Scene 0: What We Do Title
-   ========================================== */
+/* --- Shared Element Components --- */
 .scene-tag {
   display: inline-block;
   padding: 6px 18px;
@@ -496,53 +494,15 @@ img { max-width: 100%; height: auto; }
   margin-bottom: 20px;
 }
 
-.scene-subtitle {
-  font-size: 1.15rem;
-  color: var(--text-secondary);
-  max-width: 440px;
-  margin: 0 auto 36px;
-}
-
-.flow-hint {
-  animation: floatArrow 2s ease-in-out infinite;
-  opacity: 0.7;
-}
-
-@keyframes floatArrow {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(8px); }
-}
-
-.scene[data-scene="0"].active .scene-heading {
-  animation: fadeSlideUp 0.7s ease-out forwards;
-}
-
-.scene[data-scene="0"].active .scene-tag {
-  animation: fadeSlideUp 0.5s ease-out forwards;
-}
-
-.scene[data-scene="0"].active .scene-subtitle {
-  animation: fadeSlideUp 0.7s ease-out 0.15s both;
-}
-
-.scene[data-scene="0"].active .flow-hint {
-  animation: fadeSlideUp 0.7s ease-out 0.3s both, floatArrow 2s ease-in-out 1s infinite;
-}
-
 /* ==========================================
-   Scene 1: Services Side-by-Side
+   Scene 0: Our Services Tiles Grid
    ========================================== */
 .scene-wide {
   max-width: 1100px;
 }
 
 .branch-connector-top {
-  margin-bottom: 12px;
-}
-
-.branch-connector-top svg {
-  max-width: 100%;
-  height: auto;
+  display: none;
 }
 
 .services-duo {
@@ -614,26 +574,22 @@ img { max-width: 100%; height: auto; }
   flex-shrink: 0;
 }
 
-.scene[data-scene="1"].active .panel-left {
+/* Active Entrance Animations for Scene 0 */
+.scene[data-scene="0"].active .panel-left {
   animation: slideFromLeft 0.7s ease-out forwards;
 }
 
-.scene[data-scene="1"].active .panel-right {
+.scene[data-scene="0"].active .panel-right {
   animation: slideFromRight 0.7s ease-out forwards;
-}
-
-.scene[data-scene="1"].active .branch-connector-top {
-  animation: fadeSlideUp 0.5s ease-out forwards;
 }
 
 .scene.active .feature-item {
   opacity: 0;
   animation: fadeSlideUp 0.5s ease-out forwards;
 }
-
-.scene.active .feature-item:nth-child(1) { animation-delay: 0.3s; }
-.scene.active .feature-item:nth-child(2) { animation-delay: 0.4s; }
-.scene.active .feature-item:nth-child(3) { animation-delay: 0.5s; }
+.scene.active .feature-item:nth-child(1) { animation-delay: 0.2s; }
+.scene.active .feature-item:nth-child(2) { animation-delay: 0.3s; }
+.scene.active .feature-item:nth-child(3) { animation-delay: 0.4s; }
 
 @keyframes slideFromLeft {
   from { opacity: 0; transform: translateX(-50px); }
@@ -646,15 +602,10 @@ img { max-width: 100%; height: auto; }
 }
 
 /* ==========================================
-   Scene 4: Get in Touch CTA
+   Scene 1: Get in Touch CTA
    ========================================== */
 .converge-connector {
-  margin-bottom: 24px;
-}
-
-.converge-connector svg {
-  max-width: 100%;
-  height: auto;
+  display: none;
 }
 
 .cta-content {
@@ -687,34 +638,31 @@ img { max-width: 100%; height: auto; }
   line-height: 1.7;
 }
 
-.scene[data-scene="2"].active .converge-connector {
-  animation: fadeSlideUp 0.5s ease-out forwards;
-}
-
-.scene[data-scene="2"].active .cta-heading {
+/* Active Entrance Animations for Scene 1 */
+.scene[data-scene="1"].active .cta-heading {
   animation: fadeSlideUp 0.6s ease-out 0.1s both;
 }
 
-.scene[data-scene="2"].active .cta-badge {
+.scene[data-scene="1"].active .cta-badge {
   animation: fadeSlideUp 0.5s ease-out forwards;
 }
 
-.scene[data-scene="2"].active .cta-desc {
+.scene[data-scene="1"].active .cta-desc {
   animation: fadeSlideUp 0.6s ease-out 0.2s both;
 }
 
-.scene[data-scene="2"].active .cta-content .btn {
+.scene[data-scene="1"].active .cta-content .btn {
   animation: fadeSlideUp 0.6s ease-out 0.35s both;
 }
 
-/* --- Shared Animation --- */
+/* --- Shared Transition Animation Keyframes --- */
 @keyframes fadeSlideUp {
   from { opacity: 0; transform: translateY(24px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
 /* ==========================================
-   Contact Section
+   Contact Form Section
    ========================================== */
 .contact {
   position: relative;
@@ -836,7 +784,7 @@ select.glass-input option {
 }
 
 /* ==========================================
-   Responsive
+   Responsive Breakpoints
    ========================================== */
 @media (max-width: 768px) {
   .mobile-toggle {
@@ -876,6 +824,10 @@ select.glass-input option {
     font-size: 1rem;
   }
 
+  .scroll-experience {
+    height: 140vh; /* Rebalanced 2-scene target track distance depth for tablet screens */
+  }
+
   .services-duo {
     grid-template-columns: 1fr;
     gap: 20px;
@@ -883,11 +835,6 @@ select.glass-input option {
 
   .service-panel {
     padding: 28px 24px;
-  }
-
-  .branch-connector-top,
-  .converge-connector {
-    display: none;
   }
 
   .scroll-progress {
@@ -917,10 +864,6 @@ select.glass-input option {
     padding: 80px 0;
   }
 
-  .scroll-experience {
-    height: 380vh;
-  }
-
   .scene-heading {
     font-size: clamp(2.5rem, 10vw, 4rem);
   }
@@ -929,8 +872,9 @@ select.glass-input option {
     font-size: clamp(2rem, 8vw, 3.5rem);
   }
 
-  .scene[data-scene="1"].active .panel-left,
-  .scene[data-scene="1"].active .panel-right {
+  /* Corrected mobile active service panel trigger */
+  .scene[data-scene="0"].active .panel-left,
+  .scene[data-scene="0"].active .panel-right {
     animation: fadeSlideUp 0.6s ease-out forwards;
   }
 }
