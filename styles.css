@@ -521,6 +521,7 @@ img { max-width: 100%; height: auto; }
 .flow-hint {
   animation: floatArrow 2s ease-in-out infinite;
   opacity: 0.7;
+  display: none;
 }
 
 @keyframes floatArrow {
