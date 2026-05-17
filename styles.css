@@ -23,8 +23,8 @@
   --glass-bg-hover: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%);
   --glass-border: rgba(255, 255, 255, 0.08);
   --glass-border-hover: rgba(255, 255, 255, 0.18);
-  --radius: 20px;        /* Upgraded to matching premium layouts */
-  --radius-sm: 100px;    /* Circular pills for premium buttons */
+  --radius: 20px;
+  --radius-sm: 100px;
   --radius-lg: 28px;
 }
 
@@ -121,7 +121,7 @@ img { max-width: 100%; height: auto; }
   transform: translateY(-4px);
   box-shadow: 
     inset 0 1px 2px rgba(255, 255, 255, 0.15), 
-    0 16px 40px rgba(74, 158, 206, 0.15); /* Sleek accent ambient glow */
+    0 16px 40px rgba(74, 158, 206, 0.15);
 }
 
 .glass-subtle {
@@ -136,6 +136,7 @@ img { max-width: 100%; height: auto; }
 .btn {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
   padding: 14px 28px;
   border-radius: var(--radius-sm);
@@ -212,7 +213,7 @@ img { max-width: 100%; height: auto; }
   font-size: 1.1rem;
 }
 
-/* --- Premium Text Gradients --- */
+/* --- Premium Typography Layout Gradients --- */
 .text-accent {
   background: linear-gradient(135deg, #4a9ece 0%, #87cdff 100%);
   -webkit-background-clip: text;
@@ -220,10 +221,10 @@ img { max-width: 100%; height: auto; }
   display: inline-block;
 }
 
-/* --- Navigation (Floating Capsule Layout) --- */
+/* --- Navigation (Centred Capsule Island) --- */
 .navbar {
   position: fixed;
-  top: 24px;              /* Moves navigation into a floating island state */
+  top: 24px;
   left: 0;
   right: 0;
   z-index: 1000;
@@ -231,14 +232,12 @@ img { max-width: 100%; height: auto; }
   transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Micro-shift layout placement adjustments on scroll */
 .navbar.scrolled {
   top: 14px;
 }
 
 .nav-container {
-  max-width: 800px; /* Concentrates the bar towards the center */
-  width: 100%;
+  max-width: 820px; /* Concentrates navigation cleanly into center layout capsule */
   margin: 0 auto;
   display: flex;
   align-items: center;
@@ -255,15 +254,14 @@ img { max-width: 100%; height: auto; }
   transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Enhanced glow state configuration on scrolling events */
 .navbar.scrolled .nav-container {
   background: rgba(7, 14, 26, 0.7);
-  border-color: rgba(74, 158, 206, 0.35); /* Soft neon tinted border edge */
+  border-color: rgba(74, 158, 206, 0.35); 
   box-shadow: 
     0 16px 36px rgba(0, 0, 0, 0.4), 
     0 0 20px rgba(74, 158, 206, 0.15),
     inset 0 1px 0px rgba(255, 255, 255, 0.15);
-  padding: 8px 28px;
+  padding: 8px 24px;
 }
 
 .logo {
@@ -309,7 +307,6 @@ img { max-width: 100%; height: auto; }
   transition: color 0.3s ease;
 }
 
-/* Modern sliding underline link hover indicator */
 .nav-links a:not(.btn)::after {
   content: '';
   position: absolute;
@@ -409,7 +406,7 @@ img { max-width: 100%; height: auto; }
   font-weight: 800;
   line-height: 1.1;
   margin-bottom: 24px;
-  letter-spacing: -0.03em; /* Luxury tight font metrics tracking */
+  letter-spacing: -0.03em;
   background: linear-gradient(to bottom right, #ffffff 40%, #b0d4eb 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -679,13 +676,16 @@ img { max-width: 100%; height: auto; }
   text-align: center;
 }
 
+/* Fixed Cutoff: Expanded horizontal alignment padding limits with absolute scaling */
 .cta-badge {
-  display: inline-block;
-  padding: 8px 24px; /* Increased side padding so characters aren't choked */
-  font-size: 0.8rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 28px; /* High fidelity balance tracking prevents character text choking */
+  font-size: 0.82rem;
   font-weight: 600;
   color: var(--accent);
-  letter-spacing: 0.05em;
+  letter-spacing: 0.06em;
   margin-bottom: 24px;
 }
 
@@ -719,7 +719,8 @@ img { max-width: 100%; height: auto; }
 }
 
 .scene[data-scene="1"].active .cta-content .btn {
-  padding: 16px 36px; /* Extra breathing room for the main text target */
+  padding: 16px 38px; /* Adds crisp extra tracking breathing layout room */
+  animation: fadeSlideUp 0.6s ease-out 0.35s both;
 }
 
 /* --- Shared Transition Animation Keyframes --- */
@@ -864,6 +865,7 @@ select.glass-input option {
   }
 
   .nav-container {
+    max-width: 100%; /* Scaling resets naturally on tablet/phones screens layout */
     padding: 10px 20px;
   }
 
@@ -871,7 +873,6 @@ select.glass-input option {
     display: flex;
   }
 
-  /* Renders as a beautiful separate floating glass block right underneath the capsule */
   .nav-links {
     display: none;
     position: absolute;
@@ -895,7 +896,7 @@ select.glass-input option {
   }
 
   .nav-links a:not(.btn)::after {
-    display: none; /* Disable indicator underlines on small sizes */
+    display: none; 
   }
 
   .btn-nav {
@@ -976,10 +977,6 @@ select.glass-input option {
   .hero-ctas {
     flex-direction: column;
     align-items: center;
-  }
-
-  .nav-container {
-    max-width: 100%; /* Allows it to scale naturally on smaller screens */
   }
 
   .hero-ctas .btn {
