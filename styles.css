@@ -17,15 +17,15 @@
   --accent-light: #6cb4d9;
   --accent-glow: rgba(74, 158, 206, 0.4);
   --text-primary: #ffffff;
-  --text-secondary: rgba(255, 255, 255, 0.7);
+  --text-secondary: rgba(255, 255, 255, 0.75);
   --text-muted: rgba(255, 255, 255, 0.45);
-  --glass-bg: rgba(255, 255, 255, 0.05);
-  --glass-bg-hover: rgba(255, 255, 255, 0.08);
-  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-bg: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%);
+  --glass-bg-hover: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%);
+  --glass-border: rgba(255, 255, 255, 0.08);
   --glass-border-hover: rgba(255, 255, 255, 0.18);
-  --radius: 16px;
-  --radius-sm: 10px;
-  --radius-lg: 24px;
+  --radius: 20px;
+  --radius-sm: 100px;
+  --radius-lg: 28px;
 }
 
 html {
@@ -105,22 +105,29 @@ img { max-width: 100%; height: auto; }
 /* --- Glass Utilities --- */
 .glass-card {
   background: var(--glass-bg);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
   border: 1px solid var(--glass-border);
   border-radius: var(--radius);
-  transition: all 0.3s ease;
+  box-shadow: 
+    inset 0 1px 1px rgba(255, 255, 255, 0.1), 
+    0 8px 32px rgba(0, 0, 0, 0.25);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .glass-card:hover {
   background: var(--glass-bg-hover);
   border-color: var(--glass-border-hover);
+  transform: translateY(-4px);
+  box-shadow: 
+    inset 0 1px 2px rgba(255, 255, 255, 0.15), 
+    0 16px 40px rgba(74, 158, 206, 0.15);
 }
 
 .glass-subtle {
-  background: rgba(255, 255, 255, 0.06);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 100px;
 }
@@ -129,6 +136,7 @@ img { max-width: 100%; height: auto; }
 .btn {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
   padding: 14px 28px;
   border-radius: var(--radius-sm);
@@ -137,34 +145,36 @@ img { max-width: 100%; height: auto; }
   font-weight: 600;
   cursor: pointer;
   border: none;
-  transition: all 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   white-space: nowrap;
 }
 
 .btn-primary {
-  background: var(--accent);
+  background: linear-gradient(135deg, var(--accent) 0%, #357ca5 100%);
   color: white;
-  box-shadow: 0 4px 20px var(--accent-glow);
+  box-shadow: 0 4px 20px rgba(74, 158, 206, 0.35);
 }
 
 .btn-primary:hover {
-  background: var(--accent-light);
-  box-shadow: 0 6px 30px var(--accent-glow);
+  background: linear-gradient(135deg, var(--accent-light) 0%, var(--accent) 100%);
+  box-shadow: 0 6px 26px rgba(74, 158, 206, 0.5);
   transform: translateY(-2px);
 }
 
 .btn-glass {
-  background: var(--glass-bg);
+  background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   border: 1px solid var(--glass-border);
   color: var(--text-primary);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.05);
 }
 
 .btn-glass:hover {
-  background: var(--glass-bg-hover);
+  background: rgba(255, 255, 255, 0.08);
   border-color: var(--glass-border-hover);
   transform: translateY(-2px);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.1), 0 8px 20px rgba(0,0,0,0.2);
 }
 
 .btn-glass .arrow {
@@ -176,17 +186,19 @@ img { max-width: 100%; height: auto; }
 }
 
 .btn-nav {
-  padding: 10px 22px;
-  background: var(--accent);
-  color: white;
+  padding: 8px 20px;
+  background: linear-gradient(135deg, var(--accent) 0%, #357ca5 100%);
+  color: white !important;
   border-radius: var(--radius-sm);
   font-weight: 600;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
+  box-shadow: 0 4px 12px rgba(74, 158, 206, 0.25);
 }
 
 .btn-nav:hover {
-  background: var(--accent-light);
-  box-shadow: 0 4px 20px var(--accent-glow);
+  background: linear-gradient(135deg, var(--accent-light) 0%, var(--accent) 100%);
+  box-shadow: 0 6px 16px rgba(74, 158, 206, 0.4);
+  transform: translateY(-1px);
 }
 
 .btn-full {
@@ -201,33 +213,55 @@ img { max-width: 100%; height: auto; }
   font-size: 1.1rem;
 }
 
+/* --- Premium Typography Layout Gradients --- */
 .text-accent {
-  color: var(--accent);
+  background: linear-gradient(135deg, #4a9ece 0%, #87cdff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
 }
 
-/* --- Navigation --- */
+/* --- Navigation (Centred Capsule Island) --- */
 .navbar {
   position: fixed;
-  top: 0;
+  top: 24px;
   left: 0;
   right: 0;
   z-index: 1000;
-  padding: 16px 0;
-  transition: all 0.3s ease;
+  padding: 0 24px;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .navbar.scrolled {
-  background: rgba(7, 14, 26, 0.85);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid var(--glass-border);
-  padding: 10px 0;
+  top: 14px;
 }
 
 .nav-container {
+  max-width: 820px; /* Concentrates navigation cleanly into center layout capsule */
+  margin: 0 auto;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  padding: 10px 24px;
+  background: rgba(11, 26, 46, 0.4);    
+  backdrop-filter: blur(24px);           
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 100px;                  
+  box-shadow: 
+    0 4px 30px rgba(0, 0, 0, 0.2), 
+    inset 0 1px 1px rgba(255, 255, 255, 0.1); 
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.navbar.scrolled .nav-container {
+  background: rgba(7, 14, 26, 0.7);
+  border-color: rgba(74, 158, 206, 0.35); 
+  box-shadow: 
+    0 16px 36px rgba(0, 0, 0, 0.4), 
+    0 0 20px rgba(74, 158, 206, 0.15),
+    inset 0 1px 0px rgba(255, 255, 255, 0.15);
+  padding: 8px 24px;
 }
 
 .logo {
@@ -237,34 +271,61 @@ img { max-width: 100%; height: auto; }
 }
 
 .logo-img {
-  height: 36px;
+  height: 32px;
   width: auto;
   object-fit: contain;
-  filter: drop-shadow(0 0 6px rgba(74, 155, 217, 0.3));
+  filter: drop-shadow(0 0 8px rgba(74, 158, 206, 0.4));
+  transition: transform 0.3s ease;
+}
+
+.logo:hover .logo-img {
+  transform: rotate(4deg) scale(1.05);
 }
 
 .logo-text {
-  font-size: 1.25rem;
+  font-size: 1.2rem;
   font-weight: 700;
-  color: var(--accent);
+  letter-spacing: -0.01em;
+  background: linear-gradient(135deg, #ffffff 40%, var(--accent-light) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .nav-links {
   display: flex;
   align-items: center;
-  gap: 32px;
+  gap: 28px;
   list-style: none;
 }
 
 .nav-links a {
-  font-size: 0.9rem;
+  font-size: 0.88rem;
   font-weight: 500;
   color: var(--text-secondary);
+  position: relative;
+  padding: 6px 0;
   transition: color 0.3s ease;
 }
 
-.nav-links a:hover {
+.nav-links a:not(.btn)::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background: var(--accent);
+  border-radius: 2px;
+  transform: translateX(-50%);
+  transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.nav-links a:not(.btn):hover {
   color: var(--text-primary);
+}
+
+.nav-links a:not(.btn):hover::after {
+  width: 100%;
 }
 
 .mobile-toggle {
@@ -274,12 +335,12 @@ img { max-width: 100%; height: auto; }
   background: none;
   border: none;
   cursor: pointer;
-  padding: 4px;
+  padding: 6px;
 }
 
 .mobile-toggle span {
   display: block;
-  width: 24px;
+  width: 22px;
   height: 2px;
   background: var(--text-primary);
   border-radius: 2px;
@@ -295,7 +356,7 @@ img { max-width: 100%; height: auto; }
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding: 120px 24px 80px;
+  padding: 140px 24px 80px;
 }
 
 .hero-glow {
@@ -345,7 +406,10 @@ img { max-width: 100%; height: auto; }
   font-weight: 800;
   line-height: 1.1;
   margin-bottom: 24px;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.03em;
+  background: linear-gradient(to bottom right, #ffffff 40%, #b0d4eb 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .hero-subtitle {
@@ -397,7 +461,7 @@ img { max-width: 100%; height: auto; }
 .scroll-experience {
   position: relative;
   z-index: 1;
-  height: 160vh; /* Consolidated snappy distance layout tracking */
+  height: 160vh;
 }
 
 .scroll-viewport {
@@ -612,13 +676,16 @@ img { max-width: 100%; height: auto; }
   text-align: center;
 }
 
+/* Fixed Cutoff: Expanded horizontal alignment padding limits with absolute scaling */
 .cta-badge {
-  display: inline-block;
-  padding: 6px 18px;
-  font-size: 0.8rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 28px; /* High fidelity balance tracking prevents character text choking */
+  font-size: 0.82rem;
   font-weight: 600;
   color: var(--accent);
-  letter-spacing: 0.05em;
+  letter-spacing: 0.06em;
   margin-bottom: 24px;
 }
 
@@ -652,6 +719,7 @@ img { max-width: 100%; height: auto; }
 }
 
 .scene[data-scene="1"].active .cta-content .btn {
+  padding: 16px 38px; /* Adds crisp extra tracking breathing layout room */
   animation: fadeSlideUp 0.6s ease-out 0.35s both;
 }
 
@@ -707,9 +775,9 @@ img { max-width: 100%; height: auto; }
 .glass-input {
   width: 100%;
   padding: 14px 18px;
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(255, 255, 255, 0.03);
   border: 1px solid var(--glass-border);
-  border-radius: var(--radius-sm);
+  border-radius: 12px;
   color: var(--text-primary);
   font-family: inherit;
   font-size: 0.95rem;
@@ -723,7 +791,7 @@ img { max-width: 100%; height: auto; }
 .glass-input:focus {
   border-color: var(--accent);
   background: rgba(74, 158, 206, 0.05);
-  box-shadow: 0 0 0 3px rgba(74, 158, 206, 0.1);
+  box-shadow: 0 0 0 3px rgba(74, 158, 206, 0.15);
 }
 
 textarea.glass-input { resize: vertical; min-height: 100px; }
@@ -787,6 +855,20 @@ select.glass-input option {
    Responsive Breakpoints
    ========================================== */
 @media (max-width: 768px) {
+  .navbar {
+    top: 16px;
+    padding: 0 16px;
+  }
+
+  .navbar.scrolled {
+    top: 10px;
+  }
+
+  .nav-container {
+    max-width: 100%; /* Scaling resets naturally on tablet/phones screens layout */
+    padding: 10px 20px;
+  }
+
   .mobile-toggle {
     display: flex;
   }
@@ -794,24 +876,37 @@ select.glass-input option {
   .nav-links {
     display: none;
     position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
+    top: calc(100% + 12px);
+    left: 16px;
+    right: 16px;
     flex-direction: column;
-    background: rgba(7, 14, 26, 0.95);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border-bottom: 1px solid var(--glass-border);
-    padding: 20px 24px;
-    gap: 16px;
+    background: rgba(11, 26, 46, 0.92);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 24px;
+    padding: 28px 24px;
+    gap: 20px;
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.5);
+    text-align: center;
   }
 
   .nav-links.open {
     display: flex;
   }
 
+  .nav-links a:not(.btn)::after {
+    display: none; 
+  }
+
+  .btn-nav {
+    width: 100%;
+    justify-content: center;
+    padding: 12px;
+  }
+
   .hero {
-    padding: 100px 20px 60px;
+    padding: 140px 20px 60px;
     min-height: auto;
     min-height: 100svh;
   }
@@ -825,7 +920,7 @@ select.glass-input option {
   }
 
   .scroll-experience {
-    height: 140vh; /* Rebalanced 2-scene target track distance depth for tablet screens */
+    height: 140vh;
   }
 
   .services-duo {
@@ -872,7 +967,6 @@ select.glass-input option {
     font-size: clamp(2rem, 8vw, 3.5rem);
   }
 
-  /* Corrected mobile active service panel trigger */
   .scene[data-scene="0"].active .panel-left,
   .scene[data-scene="0"].active .panel-right {
     animation: fadeSlideUp 0.6s ease-out forwards;
