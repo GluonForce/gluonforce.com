@@ -552,7 +552,7 @@ img { max-width: 100%; height: auto; }
 }
 
 .branch-connector-top {
-  margin-bottom: 12px;
+  display: none;
 }
 
 .branch-connector-top svg {
@@ -664,7 +664,7 @@ img { max-width: 100%; height: auto; }
    Scene 4: Get in Touch CTA
    ========================================== */
 .converge-connector {
-  margin-bottom: 24px;
+  display: none;
 }
 
 .converge-connector svg {
