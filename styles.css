@@ -391,13 +391,10 @@ img { max-width: 100%; height: auto; }
   50% { transform: translateX(-50%) translateY(6px); }
 }
 
-/* ==========================================
-   Scroll-Driven Experience
-   ========================================== */
 .scroll-experience {
   position: relative;
   z-index: 1;
-  height: 400vh;
+  height: 240vh; /* Reduced from 400vh to speed up transition timing */
 }
 
 .scroll-viewport {
@@ -957,6 +954,10 @@ select.glass-input option {
   .hero-ctas {
     flex-direction: column;
     align-items: center;
+  }
+
+  .scroll-experience {
+    height: 210vh;
   }
 
   .hero-ctas .btn {
