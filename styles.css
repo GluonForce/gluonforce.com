@@ -668,8 +668,7 @@ img { max-width: 100%; height: auto; }
 }
 
 .converge-connector svg {
-  max-width: 100%;
-  height: auto;
+  display: none;
 }
 
 .cta-content {
