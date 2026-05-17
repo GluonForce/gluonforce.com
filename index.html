@@ -155,7 +155,13 @@
           <p>Tell us about your project and we'll get back to you within 24 hours.</p>
         </div>
         
-        <form class="contact-form" id="contactForm" name="contact" data-netlify="true">
+        <form class="contact-form" id="contactForm" name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+          <p class="honeypot" aria-hidden="true">
+            <label>
+              Don't fill this out if you're human:
+              <input type="text" name="bot-field" tabindex="-1" autocomplete="off">
+            </label>
+          </p>
           <div class="form-row">
             <div class="form-group">
               <input type="text" name="name" class="glass-input" placeholder="Your Name" required>
