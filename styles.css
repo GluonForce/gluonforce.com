@@ -237,20 +237,21 @@ img { max-width: 100%; height: auto; }
 }
 
 .nav-container {
-  max-width: 1200px;
+  max-width: 800px; /* Concentrates the bar towards the center */
+  width: 100%;
   margin: 0 auto;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px 28px;
-  background: rgba(11, 26, 46, 0.4);    /* Crystal glass base layout overlay */
-  backdrop-filter: blur(24px);           /* Rich backdrop filter blur resolution */
+  padding: 10px 24px;
+  background: rgba(11, 26, 46, 0.4);    
+  backdrop-filter: blur(24px);           
   -webkit-backdrop-filter: blur(24px);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 100px;                  /* Pill/Capsule shape structure */
+  border-radius: 100px;                  
   box-shadow: 
     0 4px 30px rgba(0, 0, 0, 0.2), 
-    inset 0 1px 1px rgba(255, 255, 255, 0.1); /* Reflective inside highlight border */
+    inset 0 1px 1px rgba(255, 255, 255, 0.1); 
   transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -680,7 +681,7 @@ img { max-width: 100%; height: auto; }
 
 .cta-badge {
   display: inline-block;
-  padding: 6px 18px;
+  padding: 8px 24px; /* Increased side padding so characters aren't choked */
   font-size: 0.8rem;
   font-weight: 600;
   color: var(--accent);
@@ -718,7 +719,7 @@ img { max-width: 100%; height: auto; }
 }
 
 .scene[data-scene="1"].active .cta-content .btn {
-  animation: fadeSlideUp 0.6s ease-out 0.35s both;
+  padding: 16px 36px; /* Extra breathing room for the main text target */
 }
 
 /* --- Shared Transition Animation Keyframes --- */
@@ -975,6 +976,10 @@ select.glass-input option {
   .hero-ctas {
     flex-direction: column;
     align-items: center;
+  }
+
+  .nav-container {
+    max-width: 100%; /* Allows it to scale naturally on smaller screens */
   }
 
   .hero-ctas .btn {
