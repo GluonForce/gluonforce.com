@@ -38,15 +38,15 @@
   </nav>
 
   <section class="hero" id="hero">
-    <div class="hero-glow"></div>
+    <div class="hero-plasma" id="heroPlasma" aria-hidden="true"></div>
+    <div class="hero-plasma-vignette" aria-hidden="true"></div>
     <div class="container">
       <div class="hero-content">
         <div class="hero-badge glass-subtle">
           <span class="badge-dot"></span>
           AI-powered teams building with founders
         </div>
-        <h1>We Build Products<br><span class="text-accent">Alongside Founders</span></h1>
-        <p class="hero-subtitle">Sri Lankan engineering teams supercharged with AI tooling — shipping at startup speed for a fraction of the cost. We're not just staff, we're your technical partners.</p>
+        <h1>Powering tech startups across the world<br><span class="text-accent">With IT talent from Sri Lanka</span></h1>
         <div class="hero-ctas">
           <a href="#services" class="btn btn-primary">Discover What We Do ↓</a>
           <a href="#contact" class="btn btn-glass">Get in Touch <span class="arrow">→</span></a>
@@ -210,6 +210,15 @@
     </div>
   </footer>
 
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+    }
+  }
+  </script>
+  <script type="module" src="plasma-field.js"></script>
   <script src="script.js"></script>
 </body>
 </html>

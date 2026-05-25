@@ -11,6 +11,7 @@ Run `python3 -m http.server 8080` from the repo root to serve the site on `http:
 - `index.html` — Single-page site with scroll-driven experience
 - `styles.css` — All styles including glassmorphism theme and scroll viewport
 - `script.js` — Scroll tracking, scene management, navbar, form handling
+- `plasma-field.js` — Three.js hero background (torus-knot plasma + bloom), loaded as ES module
 - `assets/` — Logo images (PNG, SVG)
 
 ### Scroll-driven architecture
