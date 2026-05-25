@@ -357,24 +357,62 @@ img { max-width: 100%; height: auto; }
   justify-content: center;
   text-align: center;
   padding: 140px 24px 80px;
+  overflow: hidden;
+  isolation: isolate;
 }
 
-.hero-glow {
+.hero-plasma {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 600px;
-  height: 600px;
-  background: radial-gradient(circle, rgba(74, 158, 206, 0.12) 0%, transparent 70%);
-  border-radius: 50%;
-  filter: blur(80px);
+  inset: 0;
+  z-index: 0;
   pointer-events: none;
+}
+
+.hero-plasma canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.hero-plasma-vignette {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse 72% 58% at 50% 42%,
+    rgba(7, 14, 26, 0.92) 0%,
+    rgba(7, 14, 26, 0.55) 38%,
+    rgba(7, 14, 26, 0.15) 62%,
+    transparent 78%
+  );
+}
+
+body.has-plasma-hero .bg-orbs {
+  opacity: 0.12;
+}
+
+body.has-plasma-hero .orb {
+  opacity: 0.2;
+}
+
+.hero .container,
+.scroll-hint {
+  position: relative;
+  z-index: 2;
 }
 
 .hero-content {
   max-width: 720px;
   position: relative;
+  z-index: 2;
+}
+
+.hero-content h1,
+.hero-content .hero-subtitle,
+.hero-content .hero-badge,
+.hero-content .text-accent {
+  text-shadow: 0 2px 24px rgba(7, 14, 26, 0.85);
 }
 
 .hero-badge {
@@ -402,11 +440,12 @@ img { max-width: 100%; height: auto; }
 }
 
 .hero h1 {
-  font-size: clamp(2.5rem, 5vw, 3.8rem);
+  font-size: clamp(1.75rem, 3.25vw, 2.75rem);
   font-weight: 800;
-  line-height: 1.1;
-  margin-bottom: 24px;
+  line-height: 1.12;
+  margin-bottom: 20px;
   letter-spacing: -0.03em;
+  text-wrap: balance;
   background: linear-gradient(to bottom right, #ffffff 40%, #b0d4eb 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -919,13 +958,22 @@ select.glass-input option {
   }
 
   .hero {
-    padding: 140px 20px 60px;
+    padding: 128px 20px 56px;
     min-height: auto;
     min-height: 100svh;
   }
 
+  .hero-badge {
+    margin-bottom: 20px;
+    font-size: 0.8rem;
+    padding: 7px 14px;
+  }
+
   .hero h1 {
-    font-size: 2.2rem;
+    font-size: 1.8125rem;
+    line-height: 1.18;
+    margin-bottom: 18px;
+    letter-spacing: -0.025em;
   }
 
   .hero-subtitle {
@@ -987,6 +1035,20 @@ select.glass-input option {
 }
 
 @media (max-width: 480px) {
+  .hero {
+    padding: 120px 16px 48px;
+  }
+
+  .hero-content {
+    max-width: 100%;
+  }
+
+  .hero h1 {
+    font-size: 1.5625rem;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+  }
+
   .hero-ctas {
     flex-direction: column;
     align-items: center;
@@ -995,5 +1057,22 @@ select.glass-input option {
   .hero-ctas .btn {
     width: 100%;
     justify-content: center;
+  }
+}
+
+/* iPhone 15 Pro Max portrait (430×932) and similar large phones */
+@media (max-width: 430px) {
+  .hero {
+    padding-top: 116px;
+  }
+
+  .hero h1 {
+    font-size: 1.5rem;
+    line-height: 1.22;
+  }
+
+  .hero-badge {
+    margin-bottom: 16px;
+    font-size: 0.75rem;
   }
 }
