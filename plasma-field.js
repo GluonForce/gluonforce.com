@@ -1,9 +1,22 @@
 import * as THREE from 'three';
-import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
-import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
-import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
 
 const BG_COLOR = 0x070e1a;
+
+let postprocessingModules;
+function loadPostprocessing() {
+  if (!postprocessingModules) {
+    postprocessingModules = Promise.all([
+      import('three/addons/postprocessing/EffectComposer.js'),
+      import('three/addons/postprocessing/RenderPass.js'),
+      import('three/addons/postprocessing/UnrealBloomPass.js'),
+    ]).then(([composer, renderPass, bloom]) => ({
+      EffectComposer: composer.EffectComposer,
+      RenderPass: renderPass.RenderPass,
+      UnrealBloomPass: bloom.UnrealBloomPass,
+    }));
+  }
+  return postprocessingModules;
+}
 const ACCENT = 0x4a9ece;
 
 /** Logo-mark torus knot: (3,5) — hexagonal 6-lobe interlace (vs trefoil 2,3) */
@@ -165,167 +178,7 @@ function buildFiberField(curve, options) {
   };
 }
 
-function updateFiberPositions(fiberField, time) {
-  const {
-    geometry,
-    curve,
-    tubularSamples,
-    fibersPerRing,
-    bundleRadius,
-  } = fiberField;
-
-  const positions = geometry.attributes.position.array;
-  const uCoords = geometry.attributes.aU.array;
-  const ringAngles = geometry.attributes.aRing.array;
-
-  const point = new THREE.Vector3();
-  const tangent = new THREE.Vector3();
-  const normal = new THREE.Vector3();
-  const binormal = new THREE.Vector3();
-  const offset = new THREE.Vector3();
-
-  let idx = 0;
-  for (let i = 0; i < tubularSamples; i++) {
-    const u = i / tubularSamples;
-    curve.getPointAt(u, point);
-    curve.getTangentAt(u, tangent).normalize();
-
-    normal.set(0, 1, 0).cross(tangent);
-    if (normal.lengthSq() < 1e-8) normal.set(1, 0, 0);
-    normal.normalize();
-    binormal.crossVectors(tangent, normal).normalize();
-
-    const flow = Math.sin(u * Math.PI * 2 * LOGO_KNOT.q - time * 2.2) * 0.04;
-
-    for (let f = 0; f < fibersPerRing; f++) {
-      const ringAngle = ringAngles[idx];
-      const wobble = Math.sin(u * Math.PI * 2 * LOGO_KNOT.q * 2 + ringAngle * 3 + time * 1.5) * 0.1;
-      const radial = bundleRadius * (0.45 + (f / fibersPerRing) * 0.55 + wobble * 0.15) + flow;
-
-      offset
-        .copy(normal)
-        .multiplyScalar(Math.cos(ringAngle) * radial)
-        .addScaledVector(binormal, Math.sin(ringAngle) * radial);
-
-      const i3 = idx * 3;
-      positions[i3] = point.x + offset.x + tangent.x * flow * 0.5;
-      positions[i3 + 1] = point.y + offset.y + tangent.y * flow * 0.5;
-      positions[i3 + 2] = point.z + offset.z + tangent.z * flow * 0.5;
-      idx++;
-    }
-  }
-
-  geometry.attributes.position.needsUpdate = true;
-}
-
-function initPlasmaField() {
-  const container = document.getElementById('heroPlasma');
-  if (!container) return null;
-
-  try {
-    return initPlasmaFieldScene(container);
-  } catch (err) {
-    console.error('[plasma-field] Failed to initialize:', err);
-    return null;
-  }
-}
-
-function initPlasmaFieldScene(container) {
-  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const isCoarse = window.matchMedia('(pointer: coarse)').matches;
-  const isMobile = window.innerWidth < 768 || isCoarse;
-
-  let renderer;
-  try {
-    renderer = new THREE.WebGLRenderer({
-      antialias: !isMobile,
-      alpha: true,
-      powerPreference: 'high-performance',
-    });
-  } catch (err) {
-    console.warn('[plasma-field] WebGL unavailable:', err);
-    return null;
-  }
-
-  document.body.classList.add('has-plasma-hero');
-
-  const scene = new THREE.Scene();
-  scene.background = new THREE.Color(BG_COLOR);
-  scene.fog = new THREE.FogExp2(BG_COLOR, 0.1);
-
-  const camera = new THREE.PerspectiveCamera(48, 1, 0.1, 50);
-  camera.position.set(0, 0, 6);
-
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobile ? 1.5 : 2));
-  renderer.setClearColor(BG_COLOR, 1);
-  renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 0.95;
-  container.appendChild(renderer.domElement);
-
-  const plasmaGroup = new THREE.Group();
-  scene.add(plasmaGroup);
-
-  const knotCurve = createLogoKnotCurve();
-
-  const knotUniforms = { uTime: { value: 0 } };
-  const knotVertexShader = `
-    varying vec2 vUv;
-    varying vec3 vNormal;
-    varying vec3 vViewPosition;
-    void main() {
-      vUv = uv;
-      vNormal = normalize(normalMatrix * normal);
-      vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
-      vViewPosition = -mvPosition.xyz;
-      gl_Position = projectionMatrix * mvPosition;
-    }
-  `;
-
-  const knotFragmentShader = `
-    uniform float uTime;
-    varying vec2 vUv;
-    varying vec3 vNormal;
-    varying vec3 vViewPosition;
-
-    void main() {
-      vec3 viewDir = normalize(vViewPosition);
-      float fresnel = pow(1.0 - abs(dot(vNormal, viewDir)), 2.4);
-
-      float ribs = sin(vUv.x * 72.0) * 0.5 + 0.5;
-      float along = sin(vUv.y * 110.0 + uTime * 2.8) * 0.5 + 0.5;
-      float weave = pow(ribs * along, 0.7);
-
-      vec3 deep = vec3(0.08, 0.32, 0.72);
-      vec3 mid = vec3(0.22, 0.58, 0.95);
-      vec3 core = vec3(0.55, 0.82, 1.0);
-      vec3 color = mix(deep, mid, weave);
-      color = mix(color, core, fresnel * 0.65 + weave * 0.25);
-
-      float brightness = 0.28 + weave * 0.42 + fresnel * 0.3;
-      gl_FragColor = vec4(color * brightness, 0.5 + fresnel * 0.35);
-    }
-  `;
-
-  const knotMesh = new THREE.Mesh(
-    new THREE.TorusKnotGeometry(
-      LOGO_KNOT.radius,
-      LOGO_KNOT.tube,
-      isMobile ? 160 : LOGO_KNOT.tubularSegments,
-      LOGO_KNOT.radialSegments,
-      LOGO_KNOT.p,
-      LOGO_KNOT.q
-    ),
-    new THREE.ShaderMaterial({
-      uniforms: knotUniforms,
-      vertexShader: knotVertexShader,
-      fragmentShader: knotFragmentShader,
-      transparent: true,
-      depthWrite: true,
-      side: THREE.DoubleSide,
-    })
-  );
-  plasmaGroup.add(knotMesh);
-
+function buildPlasmaEffects(plasmaGroup, knotCurve, isMobile) {
   const outerFibers = buildFiberField(knotCurve, {
     tubularSamples: isMobile ? 160 : 300,
     fibersPerRing: isMobile ? 10 : 14,
@@ -425,20 +278,208 @@ function initPlasmaFieldScene(container) {
   );
   plasmaGroup.add(sparks);
 
-  plasmaGroup.scale.setScalar(0.86);
+  return {
+    outerFibers,
+    innerFibers,
+    shellGeometry,
+    shellPoints,
+    sparks,
+    shellCount,
+    shellDirs,
+    shellPhases,
+    shellRadius,
+  };
+}
+
+function updateFiberPositions(fiberField, time) {
+  const {
+    geometry,
+    curve,
+    tubularSamples,
+    fibersPerRing,
+    bundleRadius,
+  } = fiberField;
+
+  const positions = geometry.attributes.position.array;
+  const uCoords = geometry.attributes.aU.array;
+  const ringAngles = geometry.attributes.aRing.array;
+
+  const point = new THREE.Vector3();
+  const tangent = new THREE.Vector3();
+  const normal = new THREE.Vector3();
+  const binormal = new THREE.Vector3();
+  const offset = new THREE.Vector3();
+
+  let idx = 0;
+  for (let i = 0; i < tubularSamples; i++) {
+    const u = i / tubularSamples;
+    curve.getPointAt(u, point);
+    curve.getTangentAt(u, tangent).normalize();
+
+    normal.set(0, 1, 0).cross(tangent);
+    if (normal.lengthSq() < 1e-8) normal.set(1, 0, 0);
+    normal.normalize();
+    binormal.crossVectors(tangent, normal).normalize();
+
+    const flow = Math.sin(u * Math.PI * 2 * LOGO_KNOT.q - time * 2.2) * 0.04;
+
+    for (let f = 0; f < fibersPerRing; f++) {
+      const ringAngle = ringAngles[idx];
+      const wobble = Math.sin(u * Math.PI * 2 * LOGO_KNOT.q * 2 + ringAngle * 3 + time * 1.5) * 0.1;
+      const radial = bundleRadius * (0.45 + (f / fibersPerRing) * 0.55 + wobble * 0.15) + flow;
+
+      offset
+        .copy(normal)
+        .multiplyScalar(Math.cos(ringAngle) * radial)
+        .addScaledVector(binormal, Math.sin(ringAngle) * radial);
+
+      const i3 = idx * 3;
+      positions[i3] = point.x + offset.x + tangent.x * flow * 0.5;
+      positions[i3 + 1] = point.y + offset.y + tangent.y * flow * 0.5;
+      positions[i3 + 2] = point.z + offset.z + tangent.z * flow * 0.5;
+      idx++;
+    }
+  }
+
+  geometry.attributes.position.needsUpdate = true;
+}
+
+function initPlasmaField() {
+  const container = document.getElementById('heroPlasma');
+  if (!container) return null;
+
+  try {
+    return initPlasmaFieldScene(container);
+  } catch (err) {
+    console.error('[plasma-field] Failed to initialize:', err);
+    return null;
+  }
+}
+
+function initPlasmaFieldScene(container) {
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const isCoarse = window.matchMedia('(pointer: coarse)').matches;
+  const isMobile = window.innerWidth < 768 || isCoarse;
+
+  let renderer;
+  try {
+    renderer = new THREE.WebGLRenderer({
+      antialias: !isMobile,
+      alpha: true,
+      powerPreference: 'high-performance',
+    });
+  } catch (err) {
+    console.warn('[plasma-field] WebGL unavailable:', err);
+    return null;
+  }
+
+  document.body.classList.add('has-plasma-hero');
+
+  const scene = new THREE.Scene();
+  scene.background = new THREE.Color(BG_COLOR);
+  scene.fog = new THREE.FogExp2(BG_COLOR, 0.1);
+
+  function getLayoutForWidth(width) {
+    const mobile = width < 768 || window.matchMedia('(pointer: coarse)').matches;
+    return {
+      isMobile: mobile,
+      fov: mobile ? 50 : 48,
+      cameraZ: mobile ? 8.2 : 6,
+      groupScale: mobile ? 0.52 : 0.86,
+      groupY: mobile ? 0.35 : 0,
+    };
+  }
+
+  let layout = getLayoutForWidth(window.innerWidth);
+  const camera = new THREE.PerspectiveCamera(layout.fov, 1, 0.1, 50);
+  camera.position.set(0, 0, layout.cameraZ);
+
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobile ? 1.5 : 2));
+  renderer.setClearColor(BG_COLOR, 1);
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 0.95;
+  container.appendChild(renderer.domElement);
+
+  const plasmaGroup = new THREE.Group();
+  scene.add(plasmaGroup);
+
+  const knotCurve = createLogoKnotCurve();
+  loadPostprocessing();
+
+  const knotUniforms = { uTime: { value: 0 } };
+  const knotVertexShader = `
+    varying vec2 vUv;
+    varying vec3 vNormal;
+    varying vec3 vViewPosition;
+    void main() {
+      vUv = uv;
+      vNormal = normalize(normalMatrix * normal);
+      vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+      vViewPosition = -mvPosition.xyz;
+      gl_Position = projectionMatrix * mvPosition;
+    }
+  `;
+
+  const knotFragmentShader = `
+    uniform float uTime;
+    varying vec2 vUv;
+    varying vec3 vNormal;
+    varying vec3 vViewPosition;
+
+    void main() {
+      vec3 viewDir = normalize(vViewPosition);
+      float fresnel = pow(1.0 - abs(dot(vNormal, viewDir)), 2.4);
+
+      float ribs = sin(vUv.x * 72.0) * 0.5 + 0.5;
+      float along = sin(vUv.y * 110.0 + uTime * 2.8) * 0.5 + 0.5;
+      float weave = pow(ribs * along, 0.7);
+
+      vec3 deep = vec3(0.08, 0.32, 0.72);
+      vec3 mid = vec3(0.22, 0.58, 0.95);
+      vec3 core = vec3(0.55, 0.82, 1.0);
+      vec3 color = mix(deep, mid, weave);
+      color = mix(color, core, fresnel * 0.65 + weave * 0.25);
+
+      float brightness = 0.28 + weave * 0.42 + fresnel * 0.3;
+      gl_FragColor = vec4(color * brightness, 0.5 + fresnel * 0.35);
+    }
+  `;
+
+  const knotMesh = new THREE.Mesh(
+    new THREE.TorusKnotGeometry(
+      LOGO_KNOT.radius,
+      LOGO_KNOT.tube,
+      isMobile ? 160 : LOGO_KNOT.tubularSegments,
+      LOGO_KNOT.radialSegments,
+      LOGO_KNOT.p,
+      LOGO_KNOT.q
+    ),
+    new THREE.ShaderMaterial({
+      uniforms: knotUniforms,
+      vertexShader: knotVertexShader,
+      fragmentShader: knotFragmentShader,
+      transparent: true,
+      depthWrite: true,
+      side: THREE.DoubleSide,
+    })
+  );
+  plasmaGroup.add(knotMesh);
+
+  plasmaGroup.scale.setScalar(layout.groupScale);
+  plasmaGroup.position.y = layout.groupY;
   plasmaGroup.rotation.x = 0.1;
   plasmaGroup.rotation.z = -0.02;
 
-  const composer = new EffectComposer(renderer);
-  composer.addPass(new RenderPass(scene, camera));
-
-  const bloomPass = new UnrealBloomPass(
-    new THREE.Vector2(1, 1),
-    isMobile ? 0.42 : 0.62,
-    0.4,
-    0.88
-  );
-  composer.addPass(bloomPass);
+  let composer = null;
+  let outerFibers = null;
+  let innerFibers = null;
+  let shellGeometry = null;
+  let shellPoints = null;
+  let sparks = null;
+  let shellCount = 0;
+  let shellDirs = null;
+  let shellPhases = null;
+  let shellRadius = 2.1;
 
   let targetRotX = 0;
   let targetRotY = 0;
@@ -453,17 +494,32 @@ function initPlasmaFieldScene(container) {
     targetRotX = y * 0.1;
   }
 
+  function applyLayout() {
+    layout = getLayoutForWidth(window.innerWidth);
+    camera.fov = layout.fov;
+    camera.position.set(0, 0, layout.cameraZ);
+    plasmaGroup.scale.setScalar(layout.groupScale);
+    plasmaGroup.position.y = layout.groupY;
+  }
+
   function resize() {
     const width = container.clientWidth;
     const height = container.clientHeight;
     if (width === 0 || height === 0) return;
+    applyLayout();
     camera.aspect = width / height;
     camera.updateProjectionMatrix();
     renderer.setSize(width, height, false);
-    composer.setSize(width, height);
+    if (composer) composer.setSize(width, height);
+  }
+
+  function renderFrame() {
+    if (composer) composer.render();
+    else renderer.render(scene, camera);
   }
 
   function updateShell(time) {
+    if (!shellGeometry) return;
     const pos = shellGeometry.attributes.position.array;
     for (let i = 0; i < shellCount; i++) {
       const i3 = i * 3;
@@ -484,22 +540,79 @@ function initPlasmaFieldScene(container) {
     elapsed += dt;
 
     knotUniforms.uTime.value = elapsed;
-    outerFibers.material.uniforms.uTime.value = elapsed;
-    innerFibers.material.uniforms.uTime.value = elapsed;
+
+    if (outerFibers) outerFibers.material.uniforms.uTime.value = elapsed;
+    if (innerFibers) innerFibers.material.uniforms.uTime.value = elapsed;
 
     if (!prefersReducedMotion) {
-      updateFiberPositions(outerFibers, elapsed);
-      updateFiberPositions(innerFibers, elapsed * 1.15);
+      if (outerFibers) updateFiberPositions(outerFibers, elapsed);
+      if (innerFibers) updateFiberPositions(innerFibers, elapsed * 1.15);
       updateShell(elapsed);
       plasmaGroup.rotation.y += 0.0018;
       plasmaGroup.rotation.x += (0.12 + targetRotX - plasmaGroup.rotation.x) * 0.04;
       plasmaGroup.rotation.y += (targetRotY - plasmaGroup.rotation.y) * 0.04;
     }
 
-    composer.render();
+    renderFrame();
+  }
+
+  function attachPlasmaEffects() {
+    if (outerFibers) return;
+    const effects = buildPlasmaEffects(plasmaGroup, knotCurve, isMobile);
+    outerFibers = effects.outerFibers;
+    innerFibers = effects.innerFibers;
+    shellGeometry = effects.shellGeometry;
+    shellPoints = effects.shellPoints;
+    sparks = effects.sparks;
+    shellCount = effects.shellCount;
+    shellDirs = effects.shellDirs;
+    shellPhases = effects.shellPhases;
+    shellRadius = effects.shellRadius;
+  }
+
+  async function attachBloom() {
+    if (composer) return;
+    const { EffectComposer, RenderPass, UnrealBloomPass } = await loadPostprocessing();
+    composer = new EffectComposer(renderer);
+    composer.addPass(new RenderPass(scene, camera));
+    composer.addPass(
+      new UnrealBloomPass(
+        new THREE.Vector2(1, 1),
+        isMobile ? 0.42 : 0.62,
+        0.4,
+        0.88
+      )
+    );
+    resize();
+  }
+
+  function scheduleAfterPaint(callback) {
+    requestAnimationFrame(() => requestAnimationFrame(callback));
+  }
+
+  function scheduleWhenIdle(callback, timeoutMs) {
+    if ('requestIdleCallback' in window) {
+      requestIdleCallback(callback, { timeout: timeoutMs });
+    } else {
+      setTimeout(callback, 32);
+    }
   }
 
   resize();
+  renderFrame();
+  container.classList.add('is-ready');
+
+  if (isMobile) {
+    scheduleAfterPaint(attachPlasmaEffects);
+    scheduleWhenIdle(() => {
+      attachPlasmaEffects();
+      attachBloom();
+    }, 1200);
+  } else {
+    scheduleAfterPaint(attachPlasmaEffects);
+    attachBloom();
+  }
+
   window.addEventListener('resize', resize);
   if (!prefersReducedMotion) {
     window.addEventListener('mousemove', onMouseMove, { passive: true });
@@ -527,26 +640,26 @@ function initPlasmaFieldScene(container) {
     resizeObserver.disconnect();
     knotMesh.geometry.dispose();
     knotMesh.material.dispose();
-    outerFibers.geometry.dispose();
-    outerFibers.material.dispose();
-    innerFibers.geometry.dispose();
-    innerFibers.material.dispose();
-    shellGeometry.dispose();
-    shellPoints.material.dispose();
-    sparks.geometry.dispose();
-    sparks.material.dispose();
-    composer.dispose();
+    if (outerFibers) {
+      outerFibers.geometry.dispose();
+      outerFibers.material.dispose();
+    }
+    if (innerFibers) {
+      innerFibers.geometry.dispose();
+      innerFibers.material.dispose();
+    }
+    if (shellGeometry) {
+      shellGeometry.dispose();
+      shellPoints.material.dispose();
+    }
+    if (sparks) {
+      sparks.geometry.dispose();
+      sparks.material.dispose();
+    }
+    if (composer) composer.dispose();
     renderer.dispose();
     container.removeChild(renderer.domElement);
   };
 }
 
-function bootPlasmaField() {
-  initPlasmaField();
-}
-
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', bootPlasmaField);
-} else {
-  bootPlasmaField();
-}
+initPlasmaField();

@@ -7,9 +7,23 @@
   <meta name="description" content="Gluon Force builds products alongside founders using AI-powered Sri Lankan teams. Ship faster, spend less, scale effortlessly.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="icon" type="image/png" href="assets/logo-mark.png">
   <link rel="stylesheet" href="styles.css">
+  <link rel="preload" href="assets/logo-mark-sm.png" as="image">
+  <link rel="modulepreload" href="plasma-field.js">
+  <link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js" crossorigin>
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+    }
+  }
+  </script>
+  <script type="module" src="plasma-field.js"></script>
 </head>
 <body>
 
@@ -38,7 +52,17 @@
   </nav>
 
   <section class="hero" id="hero">
-    <div class="hero-plasma" id="heroPlasma" aria-hidden="true"></div>
+    <div class="hero-plasma" id="heroPlasma" aria-hidden="true">
+      <img
+        class="hero-plasma-poster"
+        src="assets/logo-mark-sm.png"
+        alt=""
+        width="512"
+        height="512"
+        decoding="async"
+        fetchpriority="high"
+      >
+    </div>
     <div class="hero-plasma-vignette" aria-hidden="true"></div>
     <div class="container">
       <div class="hero-content">
@@ -210,15 +234,6 @@
     </div>
   </footer>
 
-  <script type="importmap">
-  {
-    "imports": {
-      "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
-      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
-    }
-  }
-  </script>
-  <script type="module" src="plasma-field.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
