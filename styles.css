@@ -366,9 +366,37 @@ img { max-width: 100%; height: auto; }
   inset: 0;
   z-index: 0;
   pointer-events: none;
+  /* Matches plasma-field BG_COLOR — visible before WebGL boots */
+  background-color: #070e1a;
+  background-image: radial-gradient(
+    ellipse 42% 36% at 50% 38%,
+    rgba(74, 158, 206, 0.14) 0%,
+    rgba(74, 158, 206, 0.04) 42%,
+    transparent 68%
+  );
+}
+
+.hero-plasma-poster {
+  position: absolute;
+  left: 50%;
+  top: 38%;
+  transform: translate(-50%, -50%);
+  width: min(48vw, 240px);
+  height: auto;
+  object-fit: contain;
+  opacity: 0.88;
+  z-index: 0;
+  transition: opacity 0.45s ease, visibility 0.45s ease;
+}
+
+.hero-plasma.is-ready .hero-plasma-poster {
+  opacity: 0;
+  visibility: hidden;
 }
 
 .hero-plasma canvas {
+  position: relative;
+  z-index: 1;
   display: block;
   width: 100%;
   height: 100%;
@@ -961,6 +989,30 @@ select.glass-input option {
     padding: 128px 20px 56px;
     min-height: auto;
     min-height: 100svh;
+  }
+
+  .hero-plasma {
+    background-image: radial-gradient(
+      ellipse 38% 32% at 50% 36%,
+      rgba(74, 158, 206, 0.12) 0%,
+      rgba(74, 158, 206, 0.03) 40%,
+      transparent 62%
+    );
+  }
+
+  .hero-plasma-poster {
+    width: min(40vw, 168px);
+    top: 36%;
+  }
+
+  .hero-plasma-vignette {
+    background: radial-gradient(
+      ellipse 88% 72% at 50% 40%,
+      rgba(7, 14, 26, 0.94) 0%,
+      rgba(7, 14, 26, 0.62) 36%,
+      rgba(7, 14, 26, 0.2) 58%,
+      transparent 76%
+    );
   }
 
   .hero-badge {
